@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+    nginx:
+        container_name: ${PROJECT_NAME}_nginx
+        image: nginx:latest
+        ports:
+            - 80:80
+        volumes:
+            - ../code:/code
+            - ./images/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        networks:
+            - skeleton-network
+
+    php:
+        container_name: ${PROJECT_NAME}_php
+        image: php:7.2-fpm
+        volumes:
+            - ../code:/code
+        networks:
+            - skeleton-network
+
+    db:
+        container_name: ${PROJECT_NAME}_mysql
+        image: mysql:5.7
+        ports:
+            - 3306:3306
+        user: mysql
+        volumes:
+            - ./.data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+        networks:
+            - skeleton-network
+
+networks:
+    skeleton-network:
+        driver: bridge
