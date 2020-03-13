@@ -4,10 +4,12 @@ services:
     nginx:
         container_name: ${PROJECT_NAME}_nginx
         image: nginx:latest
+        links:
+            - php
         ports:
             - 80:80
         volumes:
-            - ../code:/code
+            - ../:/var/www/project
             - ./images/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
         networks:
             - skeleton-network
@@ -16,7 +18,7 @@ services:
         container_name: ${PROJECT_NAME}_php
         image: php:7.2-fpm
         volumes:
-            - ../code:/code
+            - ../:/var/www/project
         networks:
             - skeleton-network
 
